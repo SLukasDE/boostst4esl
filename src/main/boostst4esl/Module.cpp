@@ -1,6 +1,6 @@
 /*
 MIT License
-Copyright (c) 2019 Sven Lukas
+Copyright (c) 2019, 2020 Sven Lukas
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,53 +21,51 @@ SOFTWARE.
 */
 
 #include <boostst4esl/Module.h>
+#include <boostst4esl/Stacktrace.h>
+
 #include <esl/stacktrace/Interface.h>
-#include <esl/bootstrap/Interface.h>
+#include <esl/module/Interface.h>
+
+#include <memory>
 #include <new>         // placement new
 #include <type_traits> // aligned_storage
-#include <boostst4esl/Stacktrace.h>
 
 namespace boostst4esl {
 
 namespace {
-class Module : public esl::bootstrap::Module {
+class Module : public esl::module::Module {
 public:
-	Module() = default;
-	~Module() = default;
-
-	static void initialize();
-
-private:
-	esl::stacktrace::Interface interfaceEslStacktrace;
+	Module();
 };
 
 typename std::aligned_storage<sizeof(Module), alignof(Module)>::type moduleBuffer; // memory for the object;
 Module& module = reinterpret_cast<Module&> (moduleBuffer);
+bool isInitialized = false;
 
 esl::stacktrace::Interface::Stacktrace* createStacktrace() {
 	return new Stacktrace();
 }
 
-void Module::initialize() {
-	static bool isInitialized = false;
+Module::Module()
+: esl::module::Module()
+{
+	esl::module::Module::initialize(*this);
 
+	addInterface(std::unique_ptr<const esl::module::Interface>(new esl::stacktrace::Interface(
+			getId(), "", &createStacktrace)));
+}
+
+} /* anonymous namespace */
+
+const esl::module::Module& getModule() {
 	if(isInitialized == false) {
-		isInitialized = true;
-
 		/* ***************** *
 		 * initialize module *
 		 * ***************** */
-		new (&module) Module(); // placement new
-		esl::bootstrap::Module::initialize(module);
-		esl::stacktrace::Interface::initialize(module.interfaceEslStacktrace,
-				&createStacktrace);
-		module.interfacesProvided.next = &module.interfaceEslStacktrace;
-	}
-}
-}
 
-const esl::bootstrap::Module& getModule() {
-	Module::initialize();
+		isInitialized = true;
+		new (&module) Module(); // placement new
+	}
 	return module;
 }
 
