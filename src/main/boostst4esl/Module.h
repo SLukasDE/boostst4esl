@@ -27,7 +27,7 @@ SOFTWARE.
 
 namespace boostst4esl {
 
-const esl::module::Module& getModule();
+esl::module::Module& getModule();
 
 } /* namespace boostst4esl */
 
