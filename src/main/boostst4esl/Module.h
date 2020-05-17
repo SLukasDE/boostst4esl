@@ -28,8 +28,7 @@ SOFTWARE.
 
 namespace boostst4esl {
 
-esl::module::Module* getModulePointer(const std::string& moduleName = "");
-esl::module::Module& getModule(const std::string& moduleName = "");
+esl::module::Module& getModule();
 
 } /* namespace boostst4esl */
 
