@@ -43,17 +43,13 @@ public:
 typename std::aligned_storage<sizeof(Module), alignof(Module)>::type moduleBuffer; // memory for the object;
 Module* modulePtr = nullptr;
 
-esl::stacktrace::Interface::Stacktrace* createStacktrace() {
-	return new Stacktrace();
-}
-
 Module::Module()
 : esl::module::Module()
 {
 	esl::module::Module::initialize(*this);
 
 	addInterface(std::unique_ptr<const esl::module::Interface>(new esl::stacktrace::Interface(
-			getId(), "boost-stacktrace", &createStacktrace)));
+			getId(), "boost-stacktrace", &Stacktrace::create)));
 }
 
 } /* anonymous namespace */

@@ -57,6 +57,9 @@ std::string getLineNo(unsigned int lineNo) {
 
 } /* anonymous Namespace */
 
+std::unique_ptr<esl::stacktrace::Interface::Stacktrace> Stacktrace::create() {
+	return std::unique_ptr<esl::stacktrace::Interface::Stacktrace>(new Stacktrace);
+}
 
 Stacktrace::BacktraceEntry::BacktraceEntry(std::string functionName, std::string fileName, std::size_t lineNo)
 : functionName(std::move(functionName)),

@@ -26,6 +26,7 @@ SOFTWARE.
 #include <esl/stacktrace/Interface.h>
 #include <esl/logging/Location.h>
 #include <esl/logging/StreamReal.h>
+
 #include <ostream>
 #include <vector>
 #include <memory>
@@ -35,6 +36,8 @@ namespace boostst4esl {
 
 class Stacktrace : public esl::stacktrace::Interface::Stacktrace {
 public:
+	static std::unique_ptr<esl::stacktrace::Interface::Stacktrace> create();
+
 	Stacktrace();
 	~Stacktrace() = default;
 
