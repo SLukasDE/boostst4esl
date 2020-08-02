@@ -57,7 +57,7 @@ std::string getLineNo(unsigned int lineNo) {
 
 } /* anonymous Namespace */
 
-std::unique_ptr<esl::stacktrace::Interface::Stacktrace> Stacktrace::create() {
+std::unique_ptr<esl::stacktrace::Interface::Stacktrace> Stacktrace::create(const esl::object::Values<std::string>&) {
 	return std::unique_ptr<esl::stacktrace::Interface::Stacktrace>(new Stacktrace);
 }
 
