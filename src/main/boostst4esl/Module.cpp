@@ -48,8 +48,9 @@ Module::Module()
 {
 	esl::module::Module::initialize(*this);
 
-	addInterface(std::unique_ptr<const esl::module::Interface>(new esl::stacktrace::Interface(
-			getId(), "boostst4esl", &Stacktrace::create)));
+	addInterface(esl::stacktrace::Interface::createInterface(
+			Stacktrace::getImplementation(),
+			&Stacktrace::create));
 }
 
 } /* anonymous namespace */
