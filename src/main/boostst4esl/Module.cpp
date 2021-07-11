@@ -24,48 +24,16 @@ SOFTWARE.
 #include <boostst4esl/Stacktrace.h>
 
 #include <esl/stacktrace/Interface.h>
-#include <esl/module/Interface.h>
-#include <esl/Stacktrace.h>
-
-#include <stdexcept>
-#include <memory>
-#include <new>         // placement new
-#include <type_traits> // aligned_storage
+#include <esl/Module.h>
 
 namespace boostst4esl {
 
-namespace {
-class Module : public esl::module::Module {
-public:
-	Module();
-};
+void Module::install(esl::module::Module& module) {
+	esl::setModule(module);
 
-typename std::aligned_storage<sizeof(Module), alignof(Module)>::type moduleBuffer; // memory for the object;
-Module* modulePtr = nullptr;
-
-Module::Module()
-: esl::module::Module()
-{
-	esl::module::Module::initialize(*this);
-
-	addInterface(esl::stacktrace::Interface::createInterface(
+	module.addInterface(esl::stacktrace::Interface::createInterface(
 			Stacktrace::getImplementation(),
 			&Stacktrace::create));
-}
-
-} /* anonymous namespace */
-
-esl::module::Module& getModule() {
-	if(modulePtr == nullptr) {
-		/* ***************** *
-		 * initialize module *
-		 * ***************** */
-
-		modulePtr = reinterpret_cast<Module*> (&moduleBuffer);
-		new (modulePtr) Module; // placement new
-	}
-
-	return *modulePtr;
 }
 
 } /* namespace boostst4esl */
