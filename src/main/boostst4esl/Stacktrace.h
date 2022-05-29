@@ -27,16 +27,17 @@ SOFTWARE.
 #include <esl/logging/Location.h>
 #include <esl/logging/StreamReal.h>
 
-#include <ostream>
-#include <vector>
 #include <memory>
+#include <ostream>
 #include <string>
+#include <utility>
+#include <vector>
 
 namespace boostst4esl {
 
 class Stacktrace : public esl::stacktrace::Interface::Stacktrace {
 public:
-	static std::unique_ptr<esl::stacktrace::Interface::Stacktrace> create(const esl::stacktrace::Interface::Settings& settings);
+	static std::unique_ptr<esl::stacktrace::Interface::Stacktrace> create(const std::vector<std::pair<std::string, std::string>>& settings);
 
 	static inline const char* getImplementation() {
 		return "boostst4esl";

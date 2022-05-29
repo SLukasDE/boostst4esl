@@ -21,7 +21,10 @@ SOFTWARE.
 */
 
 #include <boostst4esl/Stacktrace.h>
+
 #include <boost/stacktrace.hpp>
+
+#include <stdexcept>
 
 namespace boostst4esl {
 
@@ -57,7 +60,11 @@ std::string getLineNo(unsigned int lineNo) {
 
 } /* anonymous Namespace */
 
-std::unique_ptr<esl::stacktrace::Interface::Stacktrace> Stacktrace::create(const esl::stacktrace::Interface::Settings&) {
+std::unique_ptr<esl::stacktrace::Interface::Stacktrace> Stacktrace::create(const std::vector<std::pair<std::string, std::string>>& settings) {
+	for(const auto& setting: settings) {
+        throw std::runtime_error("unknown attribute '\"" + setting.first + "\" at 'boost4esl::Stacktrace'.");
+	}
+
 	return std::unique_ptr<esl::stacktrace::Interface::Stacktrace>(new Stacktrace);
 }
 
